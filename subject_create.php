@@ -1,5 +1,6 @@
 <?php
 include("config.php");
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,12 +12,12 @@ include("config.php");
     <title>Create Subject</title>
 </head>
 <?php
-// if(isset($_SESSION['teacher_id'])){
-    // $id = $_SESSION['teacher_id'];
-
- $sql = "SELECT semester_name, semester_id FROM semesters;";
- $result = mysqli_query($conn,$sql);
-// }
+if(isset($_SESSION['teacher_id'])){
+    $id = $_SESSION['teacher_id'];
+    echo $id;
+    $sql = "SELECT semester_name, semester_id FROM semesters;";
+    $result = mysqli_query($conn,$sql);
+}
 ?>
 
 <body>
@@ -49,6 +50,7 @@ include("config.php");
     VALUES ( '$name', '$credit_hr', $semester_id)";
     if(mysqli_query($conn,$sql)){
         echo "Sucess";
+        header("location:dashboard.php");
     }
     else{
         echo "unsucess".mysqli_error($conn);

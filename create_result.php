@@ -2,7 +2,6 @@
    include("config.php");
    session_start();
 ?>
-
 <?php
 $id = $_SESSION['teacher_id'];
 $student_id=$_SESSION['student_id'];
@@ -49,17 +48,25 @@ if(isset($_POST['submit']))
     {
         $grade="F";
     }
-
-    $sql_1= "INSERT INTO `results` ( `result_percentage`, `is_terminal`, `result_grade`, `display_result`, `teacher_id`, `student_id`, `subject_id`) 
-    VALUES ( '$percentage', '$is_terminal', '$grade', '$display_result', '$id', '$student_id', '$subject');";
-    if(mysqli_query($conn,$sql)){
-        echo "Sucess";
+    $sql_1 = "SELECT student_id, subject_id 
+    FROM results
+    WHERE student_id = $student_id AND subject_id = $subject;";
+    $result = mysqli_query($conn, $sql_1);
+    if(mysqli_num_rows($result)>0){
+        echo "Cannot Create Multiple result, Try to Update!";
+        $url = "dashboard.php";
+        echo "<br> <a href= 'dashboard.php'>Get Back to dashboard </a>";
     }
     else{
-        echo "unsucess".mysqli_error($conn);
+        $sql_2= "INSERT INTO `results` ( `result_percentage`, `is_terminal`, `result_grade`, `display_result`, `teacher_id`, `student_id`, `subject_id`) 
+        VALUES ( '$percentage', '$is_terminal', '$grade', '$display_result', '$id', '$student_id', '$subject');";
+        if(mysqli_query($conn,$sql_2)){
+            echo "Sucess";
+            header("Location:dashboard.php");
+        }
+        else{
+            echo "unsucess".mysqli_error($conn);
+        }
     }
-    header("Location:dashboard.php");
-  }
-
-
+    }
 ?>
